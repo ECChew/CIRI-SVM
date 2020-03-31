@@ -16,7 +16,7 @@ for i in range(25):
     plt.imshow(training_images[i], cmap = plt.cm.binary)
     plt.xlabel(class_names[training_labels[i][0]])
 plt.show()
-
+print(training_images.shape)
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Conv2D(32, (3, 3), activation = 'relu', input_shape=(32, 32, 3)))
 model.add(tf.keras.layers.MaxPooling2D((2, 2)))
