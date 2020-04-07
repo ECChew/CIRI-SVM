@@ -203,6 +203,7 @@ for i, idx in enumerate(shuffled_data[shuffled_data['label'] == 0]['id'][:1]):
             print(readCroppedImage(path + '.tif'))
 """
 # %%
+"""
 train_images = np.full((trainlen, 32, 32, 3), 0)
 train_label = np.zeros(trainlen)
 test_images = np.full((testlen, 32, 32, 3), 0)
@@ -212,7 +213,7 @@ for j in range(trainlen):
     idx = train_datamat[j][0]
     path = os.path.join(train_path, idx)
     train_images[j] = readCroppedImage(path + '.tif')
-    train_label[j] = train_datamat[j][1]
+    train_label[j] = train_datamat[j][1]"""
 """for j in range(testlen):
     idxtest = test_datamat[j][0]
     testpath = os.path.join(test_path, idxtest)
@@ -223,27 +224,31 @@ for j in range(trainlen):
     testpath = os.path.join(train_path, idxtest)
     test_images[j-trainlen] = readCroppedImage(testpath + '.tif')
     test_label[j-trainlen] = train_datamat[j][1]"""
-print('test')
-print(test_label.shape)
+
+train_images = np.load('train_images_10k.npy')
+train_label = np.load('train_label_10k.npy')
+test_images = np.load('test_images_10k.npy')
+test_label = np.load('test_label_10k.npy')
+
 model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.Conv2D(32, (3, 3), activation = 'relu', input_shape=(32, 32, 3)))
+model.add(tf.keras.layers.Conv2D(64, (3, 3), activation = 'relu', input_shape=(32, 32, 3)))
 model.add(tf.keras.layers.MaxPooling2D((2, 2)))
-model.add(tf.keras.layers.Conv2D(32, (3, 3), activation = 'relu'))
+model.add(tf.keras.layers.Conv2D(64, (3, 3), activation = 'relu'))
 model.add(tf.keras.layers.MaxPooling2D((2, 2)))
-model.add(tf.keras.layers.Conv2D(32, (3, 3), activation = 'relu'))
+model.add(tf.keras.layers.Conv2D(64, (3, 3), activation = 'relu'))
 model.add(tf.keras.layers.Flatten())
-model.add(tf.keras.layers.Dense(16, activation ='relu'))
+model.add(tf.keras.layers.Dense(256, activation ='relu'))
 model.add(tf.keras.layers.Dense(2, activation ='sigmoid'))
 model.summary()
 model.compile(optimizer = 'adam',
               loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
-"""model.fit(train_images, train_label, epochs=7,
-          validation_data =(test_images, test_label))"""
-history = model.fit(train_images, train_label, epochs=5, batch_size=10, validation_split=0.1)
+history = model.fit(train_images, train_label, epochs=15, batch_size=32, validation_split=0.1)
 print(history.history)
 plt.figure()
 plt.plot(history.history['loss'], label="testloss")
 plt.plot(history.history['val_loss'], label='valloss')
+plt.plot(history.history['acc'], label="testacc")
+plt.plot(history.history['val_acc'], label='valacc')
 plt.legend()
 plt.show()
