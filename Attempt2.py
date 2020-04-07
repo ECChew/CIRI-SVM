@@ -225,10 +225,10 @@ for j in range(trainlen):
     test_images[j-trainlen] = readCroppedImage(testpath + '.tif')
     test_label[j-trainlen] = train_datamat[j][1]"""
 
-train_images = np.load('train_images_10k.npy')
-train_label = np.load('train_label_10k.npy')
-test_images = np.load('test_images_10k.npy')
-test_label = np.load('test_label_10k.npy')
+train_images = np.load(r'dataset\train_images_10k.npy')
+train_label = np.load(r'dataset\train_label_10k.npy')
+test_images = np.load(r'dataset\test_images_10k.npy')
+test_label = np.load(r'dataset\test_label_10k.npy')
 
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Conv2D(64, (3, 3), activation = 'relu', input_shape=(32, 32, 3)))
