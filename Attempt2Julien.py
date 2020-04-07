@@ -202,11 +202,6 @@ for j in range(trainlen):
     testpath = os.path.join(test_path, idxtest)
     test_images[j] = readCroppedImage(testpath + '.tif')
     test_label[j] = test_datamat[j][1]"""
-"""for j in range(trainlen, trainlen + testlen):
-    idxtest = train_datamat[j][0]
-    testpath = os.path.join(train_path, idxtest)
-    test_images[j-trainlen] = readCroppedImage(testpath + '.tif')
-    test_label[j-trainlen] = train_datamat[j][1]"""
 
 
 train_images = np.load(r'dataset\train_images_total.npy')
@@ -248,5 +243,10 @@ plt.show()
 plt.figure()
 plt.plot(history.history['acc'], label="training accuracy")
 plt.plot(history.history['val_acc'], label='test accuracy')
+plt.legend()
+plt.show()
+plt.figure()
+plt.plot(history.history['f1_m'], label="training F1")
+plt.plot(history.history['val_f1_m'], label='test F1')
 plt.legend()
 plt.show()
