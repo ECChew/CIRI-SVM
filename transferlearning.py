@@ -128,9 +128,11 @@ train_images = np.load(r'dataset\train_images_total.npy')
 train_label = np.load(r'dataset\train_label_total.npy')
 test_images = np.load(r'dataset\test_images_total.npy')
 test_label = np.load(r'dataset\test_label_total.npy')
+
 model.compile(optimizer = 'adam',
               loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy',f1_m,precision_m, recall_m])
+earlystopper = EarlyStopping(monitor='val_loss', patience=10, verbose=1, restore_best_weights=True)
 history = model.fit(train_images, train_label, epochs=25, batch_size=32, verbose = 1, validation_split=0.1, shuffle = True)
 print(history.history)
 plt.figure()
@@ -148,3 +150,4 @@ plt.plot(history.history['f1_m'], label="training F1")
 plt.plot(history.history['val_f1_m'], label='test F1')
 plt.legend()
 plt.show()
+
