@@ -26,18 +26,6 @@ train_images = train_images.reshape(1000, 32*32*3)
 X_train, X_test, y_train, y_test = train_test_split(train_images,train_label, test_size=0.1,random_state=109) # 90% training and 10% test
 
 
-#Working on
-# scaler1=StandardScaler()
-# scaler1.fit(X_test)
-# X_test_scaled=scaler1.transform(X_test)
-# #PCA
-# pca1=PCA(n_components=2)
-# X_test_scaled_reduced=pca1.fit_transform(X_test_scaled)
-# X_pca=pca1.transform(X_test_scaled)
-# #Variance: vérifier les dimensions importantes lors de l'estimation
-# feat_var =np.var(X_pca,axis=0)
-# feat_var_rat= feat_var/(np.sum(feat_var))
-# print(feat_var_rat)
 
 #--------------------------------------------------------#
 #       Cross-validation method: GridSearchCV
@@ -90,37 +78,9 @@ X_train, X_test, y_train, y_test = train_test_split(train_images,train_label, te
 #       Cross-validation method: RandomSearchCV
 #--------------------------------------------------------#
 # print('Random Search')
-# clf = RandomizedSearchCV(SVC(kernel='rbf'), dict(C=uniform(loc=0, scale=100),gamma=uniform(loc=0.0001, scale=100)))
+# clf = RandomizedSearchCV(SVC(kernel='rbf'), dict(C=uniform(loc=0, scale=100),gamma=uniform(loc=0.0001, scale=100)),n_iter=100)
 # search = clf.fit(X_train,y_train)
 # print(search.best_params_)    
-
-#--------------------------------------------------------#
-# Cross-validation method: Pipeline(scaler) + GridSearhCV
-#--------------------------------------------------------#
-# #Pipeline
-# pipe_steps = [('scaler', StandardScaler()),('pca',PCA()),('SupVM',SVC(cache_size=1000))]
-
-# check_params = {
-#     'pca__n_components': [2],
-#     'SupVM__C':[0.1,0.5,1,10,30,40,50,75,100,500,1000],
-#     'SupVM__gamma': [0.001,0.005,0.01,0.05,0.07,0.1,0.5,1,5,10,50],
-#     'SupVM__kernel':['rbf']
-#     },{
-#     'pca__n_components': [2],
-#     'SupVM__C':[0.1,0.5,1,10,30,40,50,75,100,500,1000],
-#     'SupVM__gamma': [0.001,0.005,0.01,0.05,0.07,0.1,0.5,1,5,10,50],
-#     'SupVM__kernel':['sigmoid']
-#     }
-# pipeline=Pipeline(pipe_steps)
-
-# #Training
-# print("Start Fitting Training Data")
-# for cv in tqdm(range(4,6)):
-#     create_grid = GridSearchCV(pipeline, param_grid=check_params,cv=cv,scoring='f1')
-#     create_grid.fit(X_train,y_train)
-#     print("\n Score for %d fold CV := %3.2f" %(cv, create_grid.score(X_test,y_test)))
-#     print('Best fit parameters from training data:')
-#     print(create_grid.best_params_)
 
 #--------------------------------------------------------#
 #                     SVM Classifier
@@ -163,3 +123,47 @@ print("Recall:", rec2)
 f1_2 = 2 * pre2 * rec2 / (pre2 + rec2)
 print("F1 score:", f1_2)
 
+
+#--------------------------------------------------------#
+#                   Work in progress
+#--------------------------------------------------------#
+#Working on
+# scaler1=StandardScaler()
+# scaler1.fit(X_test)
+# X_test_scaled=scaler1.transform(X_test)
+# #PCA
+# pca1=PCA(n_components=2)
+# X_test_scaled_reduced=pca1.fit_transform(X_test_scaled)
+# X_pca=pca1.transform(X_test_scaled)
+# #Variance: vérifier les dimensions importantes lors de l'estimation
+# feat_var =np.var(X_pca,axis=0)
+# feat_var_rat= feat_var/(np.sum(feat_var))
+# print(feat_var_rat)
+
+#--------------------------------------------------------#
+# Cross-validation method: Pipeline(scaler) + GridSearhCV
+#--------------------------------------------------------#
+# #Pipeline
+# pipe_steps = [('scaler', StandardScaler()),('pca',PCA()),('SupVM',SVC(cache_size=1000))]
+
+# check_params = {
+#     'pca__n_components': [2],
+#     'SupVM__C':[0.1,0.5,1,10,30,40,50,75,100,500,1000],
+#     'SupVM__gamma': [0.001,0.005,0.01,0.05,0.07,0.1,0.5,1,5,10,50],
+#     'SupVM__kernel':['rbf']
+#     },{
+#     'pca__n_components': [2],
+#     'SupVM__C':[0.1,0.5,1,10,30,40,50,75,100,500,1000],
+#     'SupVM__gamma': [0.001,0.005,0.01,0.05,0.07,0.1,0.5,1,5,10,50],
+#     'SupVM__kernel':['sigmoid']
+#     }
+# pipeline=Pipeline(pipe_steps)
+
+# #Training
+# print("Start Fitting Training Data")
+# for cv in tqdm(range(4,6)):
+#     create_grid = GridSearchCV(pipeline, param_grid=check_params,cv=cv,scoring='f1')
+#     create_grid.fit(X_train,y_train)
+#     print("\n Score for %d fold CV := %3.2f" %(cv, create_grid.score(X_test,y_test)))
+#     print('Best fit parameters from training data:')
+#     print(create_grid.best_params_)
